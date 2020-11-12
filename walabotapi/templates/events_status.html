@@ -1,0 +1,31 @@
+{% extends "layout.html" %} 
+{% block content%}
+  <div class="content-section">
+    <legend class="border-bottom mb-4">Status Events for {{ device.patient_name }} ({{ statuses.total }})</legend>
+    {% for status in statuses.items %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <span class="mr-2">{{ status.timestamp }}</span>
+          <small class="text-muted">{{ status.up_time }}</small>
+        </div>
+        <span class="device-link"><a class="btn btn-secondary btn-danger btn-sm"
+            href="{{ url_for('devices.delete_status', status_db_id=status.id, device_id=status.device_id) }}">Delete status</a></span>
+        <h2><a class="article-title" href="#">{{ status.status }}</a></h2>
+        <p class="article-content">{{ status.wifi_state }}</p>
+      </div>
+    </article>
+    {% endfor %}
+    {% for page_num in statuses.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if statuses.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('devices.status', device_id=device_id, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('devices.status', device_id=device_id, page=page_num) }}">{{ page_num }}</a>
+        {%endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock content %}

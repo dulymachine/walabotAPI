@@ -1,0 +1,30 @@
+{% extends "layout.html" %} 
+{% block content%}
+  <div class="content-section">
+    <legend class="border-bottom mb-4">Fall Events for {{ device.patient_name }} ({{ falls.total }})</legend>
+    {% for fall in falls.items %}
+    <article class="media content-section">
+      <div class="media-body">
+        <div class="article-metadata">
+          <span class="mr-2">{{ fall.timestamp_str }}</span>
+          <small class="text-muted">{{ fall.event_id }}</small>
+        </div>
+        <h2><a class="article-title"
+            href="#">{{ fall.type_ }}</a></h2>
+        <p class="article-content">{{ fall.status }}</p>
+      </div>
+    </article>
+    {% endfor %}
+    {% for page_num in falls.iter_pages(left_edge=1, right_edge=1, left_current=1, right_current=2) %}
+      {% if page_num %}
+        {% if falls.page == page_num %}
+          <a class="btn btn-info mb-4" href="{{ url_for('devices.fall', device_id=device_id, page=page_num) }}">{{ page_num }}</a>
+        {% else %}
+          <a class="btn btn-outline-info mb-4" href="{{ url_for('devices.fall', device_id=device_id, page=page_num) }}">{{ page_num }}</a>
+        {%endif %}
+      {% else %}
+        ...
+      {% endif %}
+    {% endfor %}
+  </div>
+{% endblock content %}
